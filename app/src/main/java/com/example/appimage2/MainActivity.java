@@ -5,9 +5,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import android.annotation.SuppressLint;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -19,6 +19,7 @@ import android.widget.ImageView;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,18 +35,10 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             public void onClick(View v){
-                //Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);ç
-
-
-
-
+                //Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 try {
-
-
                     dispatchTakePictureIntent();
 
-                    //  startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-                    // onActivityResult(REQUEST_IMAGE_CAPTURE,REQUEST_IMAGE_CAPTURE,takePictureIntent);
                 } catch (ActivityNotFoundException e) {
                     // display error state to the user
                 }
@@ -53,9 +46,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    static final int REQUEST_TAKE_PHOTO = 1;
+
     String currentPhotoPath;
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
+
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -72,9 +68,7 @@ public class MainActivity extends AppCompatActivity {
         return image;
     }
 
-    static final int REQUEST_TAKE_PHOTO = 1;
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -97,15 +91,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        ImageView iv = findViewById(R.id.imageView);
-//        if(requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK){
-//            Uri uri = Uri.parse(currentPhotoPath);
-//            iv.setImageURI(data.getData());
-//        }
-//        super.onActivityResult(requestCode, resultCode, data);
-//    }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            /*Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            imageView.setImageBitmap(imageBitmap);*/
+        }
+    }
 
 
 
